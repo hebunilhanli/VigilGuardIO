@@ -16,59 +16,54 @@ import java.io.OutputStream;
 
 
 public class IsolatedService extends Application {
-
     private static boolean isRunning = true;
-    private static Context context;
+    private Context context;
 
+    public IsolatedService() {
+    }
 
-
-    @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
-    }
-    public static Context getAppContext() {
-        return context;
+        this.context = this.getApplicationContext();
     }
 
     public void createCert() {
         try {
-            AssetManager assetManager = getAppContext().getAssets();
-            File file = new File(getAppContext().getFilesDir(), "server-certificate.pem");
+            AssetManager assetManager = context.getAssets();
+            File file = new File(context.getFilesDir(), "server-certificate.pem");
             InputStream in = assetManager.open("server-certificate.pem");
             OutputStream out = new FileOutputStream(file);
+            byte[] buffer = new byte[131072];
 
-            byte[] buffer = new byte[65536 * 2];
             int read;
-            while ((read = in.read(buffer)) != -1) {
+            while((read = in.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
+
             in.close();
             out.flush();
             out.close();
-
-            if (file.exists() && file.length() > 0) {
+            if (file.exists() && file.length() > 0L) {
                 Log.d("Certificate", "Certificate saved successfully at " + file.getAbsolutePath());
             } else {
                 Log.e("Certificate", "Error saving certificate!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception var7) {
+            var7.printStackTrace();
         }
-    }
-
-    public void startServices(Context y) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + y.getPackageName()));
-            y.startActivity(intent);
-            return;
-        }
-        y.startService(new Intent(getAppContext(), MyService.class));
 
     }
 
-    public void stopService(){
-        getAppContext().stopService(new Intent(getAppContext(), MyService.class));
+    public void startServices(Context context) {
+        if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
+            Intent intent = new Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION", Uri.parse("package:" + context.getPackageName()));
+            context.startActivity(intent);
+        } else {
+            context.startService(new Intent(context, MyService.class));
+        }
+    }
+
+    public void stopService(Context context) {
+        context.stopService(new Intent(context, MyService.class));
     }
 }
