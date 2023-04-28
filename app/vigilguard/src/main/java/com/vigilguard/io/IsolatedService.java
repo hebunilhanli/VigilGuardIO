@@ -57,14 +57,14 @@ public class IsolatedService extends Application {
         }
     }
 
-    public void startServices() {
+    public void startServices(Context y) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
-            context.startActivity(intent);
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + y.getPackageName()));
+            y.startActivity(intent);
             return;
         }
-        getAppContext().startService(new Intent(getAppContext(), MyService.class));
+        y.startService(new Intent(getAppContext(), MyService.class));
 
     }
 
