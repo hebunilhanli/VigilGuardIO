@@ -27,7 +27,7 @@ public class IsolatedService extends Application {
         this.context = this.getApplicationContext();
     }
 
-    public void createCert() {
+    public void createCert(Context context) {
         try {
             AssetManager assetManager = context.getAssets();
             File file = new File(context.getFilesDir(), "server-certificate.pem");
