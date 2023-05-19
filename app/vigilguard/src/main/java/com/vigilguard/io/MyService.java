@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 
 public class MyService extends Service {
-    public native void startNativeThread();
+    //public native void startNativeThread();
     public native void stopNativeThread();
     private BroadcastReceiver mReceiver;
 
@@ -20,7 +20,7 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startNativeThread();
+        //startNativeThread();
         startStaticScan();
 
         return START_STICKY;
