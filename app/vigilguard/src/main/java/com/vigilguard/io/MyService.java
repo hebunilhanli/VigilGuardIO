@@ -3,19 +3,25 @@ package com.vigilguard.io;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.view.ContentInfo;
 import android.view.WindowManager;
 
 
 public class MyService extends Service {
-    //public native void startNativeThread();
     public native void stopNativeThread();
-    private BroadcastReceiver mReceiver;
 
     public static boolean isRunning = true;
+    public static Context globalContext;
 
     public native void startStaticScan();
+
+    public Context getContextApp(Context context){
+        globalContext = context;
+        return context;
+    }
 
 
     @Override
@@ -38,13 +44,11 @@ public class MyService extends Service {
     }
 
     public void triggerAlert(String alert){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(globalContext);
         builder.setMessage(alert);
         builder.setPositiveButton("OK", null);
         AlertDialog dialog = builder.create();
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.show();
-
     }
 
 }
