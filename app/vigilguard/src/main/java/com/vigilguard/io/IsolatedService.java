@@ -27,6 +27,34 @@ public class IsolatedService extends Application {
         this.context = this.getApplicationContext();
     }
 
+    public void createCert(Context context) {
+        try {
+            AssetManager assetManager = context.getAssets();
+            File file = new File(context.getFilesDir(), "server-certificate.pem");
+            InputStream in = assetManager.open("server-certificate.pem");
+            OutputStream out = new FileOutputStream(file);
+            byte[] buffer = new byte[131072];
+
+            int read;
+            while((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+
+            in.close();
+            out.flush();
+            out.close();
+            if (file.exists() && file.length() > 0L) {
+                Log.d("Certificate", "Certificate saved successfully at " + file.getAbsolutePath());
+            } else {
+                Log.e("Certificate", "Error saving certificate!");
+            }
+        } catch (Exception var7) {
+            var7.printStackTrace();
+        }
+
+    }
+
+
 
     public void startServices(Context context) {
         context.startService(new Intent(context, MyService.class));
